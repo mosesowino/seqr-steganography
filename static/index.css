@@ -67,7 +67,22 @@ body>:first-child{
 .links:hover{
     color: var(--dark);
 }
-
+.profile{
+    backdrop-filter: blur(1px);
+    box-shadow: 5px 5px 5px  var(--dark);
+                /* -5px 0px 5px var(--dark); */
+    width: 150px;
+    height: 200px;
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    top: -40px;
+    border-radius: 5px;
+    visibility: hidden;
+}
+.profile-visible{
+    visibility: visible;
+}
 .container{
     padding: 20px;
     max-width: 600px;

@@ -6,3 +6,8 @@ function copyText(){
 }
 
 
+let profile_visible = document.querySelector(".links")
+profile_visible.addEventListener('click',()=>{
+    console.log("Clicked")
+})
+

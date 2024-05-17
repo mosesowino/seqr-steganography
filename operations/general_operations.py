@@ -3,6 +3,10 @@ from pydub import AudioSegment
 from os import path
 
 
+CURRENT_DIR = path.dirname(__file__)
+UPLOADED_FILES_DIR = path.join(CURRENT_DIR, '..', 'uploaded_files')
+
+
 def BinaryToDecimal(binary: str) -> str:
     decimal: str = int(binary, 2)
     return decimal

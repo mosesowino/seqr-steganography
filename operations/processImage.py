@@ -4,83 +4,77 @@ from os import path
 import cv2
 import numpy as np
 
-# Embed secret in the n least significant bit.
-# Lower n make picture less loss but lesser storage capacity.
-BITS = 2
+BIT_DEPTH = 2
 
-HIGH = 256 - (1 << BITS)
-LOW = (1 << BITS) - 1
-BYTES_PER_PIXEL = math.ceil(8 / BITS)
-DELIMITER = '%'
-DOWNLOAD_IMG_PATH = path.abspath("downloads/encoded_image.png")
+BIT_MASK_HIGH = 256 - (1 << BIT_DEPTH)
+BIT_MASK_LOW = (1 << BIT_DEPTH) - 1
+BYTES_PER_PIXEL = math.ceil(8 / BIT_DEPTH)
+MESSAGE_DELIMITER = '%'
+ENCODED_IMAGE_PATH = path.abspath("downloads/encoded_image.png")
 
-def encode_img_data(img_path, msg):
-    def insert(img_path, msg):
-        print(f"img_path ---> {img_path}")
-        print(f"\n download_path ---> {DOWNLOAD_IMG_PATH}")
-        img = cv2.imread(img_path, cv2.IMREAD_ANYCOLOR)
-        max_bytes = img.shape[0] * img.shape[1] // BYTES_PER_PIXEL
+def encode_image_data(image_path, message):
+    def insert_message_into_image(image_path, message):
+        print(f"Image path: {image_path}")
+        print(f"Encoded image save path: {ENCODED_IMAGE_PATH}")
+        image = cv2.imread(image_path, cv2.IMREAD_ANYCOLOR)
+        max_bytes_capacity = image.shape[0] * image.shape[1] // BYTES_PER_PIXEL
         
         # Encode message with length
-        msg = '{}{}{}'.format(len(msg), DELIMITER, msg)
-        assert max_bytes >= len(
-            msg), "Message greater than capacity:{}".format(max_bytes)
-        data = np.reshape(img, -1)
+        message_with_length = f'{len(message)}{MESSAGE_DELIMITER}{message}'
+        assert max_bytes_capacity >= len(message_with_length), "Message exceeds image capacity:{}".format(max_bytes_capacity)
         
-        for (idx, val) in enumerate(msg):
-            encode(data[idx*BYTES_PER_PIXEL: (idx+1) * BYTES_PER_PIXEL], val)
+        flat_image_data = np.reshape(image, -1)
+        
+        for index, character in enumerate(message_with_length):
+            encode_character(flat_image_data[index * BYTES_PER_PIXEL: (index + 1) * BYTES_PER_PIXEL], character)
 
-        img = np.reshape(data, img.shape)
-        filename, _ = path.splitext(DOWNLOAD_IMG_PATH)
+        reshaped_image = np.reshape(flat_image_data, image.shape)
+        filename, _ = path.splitext(ENCODED_IMAGE_PATH)
         filename += '.png'
-        img = cv2.imwrite(filename, img)
+        cv2.imwrite(filename, reshaped_image)
         return filename
 
 
-    def encode(block, data):
-        # returns the Unicode code from a given character
-        data = ord(data)
-        for idx in range(len(block)):
-            block[idx] &= HIGH
-            block[idx] |= (data >> (BITS * idx)) & LOW
+    def encode_character(image_block, character):
+        char_code = ord(character)
+        for index in range(len(image_block)):
+            image_block[index] &= BIT_MASK_HIGH
+            image_block[index] |= (char_code >> (BIT_DEPTH * index)) & BIT_MASK_LOW
             
-            
-    return insert(img_path, msg)
+    return insert_message_into_image(image_path, message)
 
-
-
-
-def decode_img_data(path):
-    def extract(path):
-        img = cv2.imread(path, cv2.IMREAD_ANYCOLOR)
-        data = np.reshape(img, -1)
-        total = data.shape[0]
-        res = ''
-        idx = 0
+def decode_image_data(image_path):
+    def extract_message_from_image(image_path):
+        image = cv2.imread(image_path, cv2.IMREAD_ANYCOLOR)
+        flat_image_data = np.reshape(image, -1)
+        total_bytes = flat_image_data.shape[0]
+        extracted_message_length = ''
+        byte_index = 0
+        
         # Decode message length
-        while idx < total // BYTES_PER_PIXEL:
-            ch = decode(data[idx*BYTES_PER_PIXEL: (idx+1)*BYTES_PER_PIXEL])
-            idx += 1
-            if ch == DELIMITER:
+        while byte_index < total_bytes // BYTES_PER_PIXEL:
+            character = decode_character(flat_image_data[byte_index * BYTES_PER_PIXEL: (byte_index + 1) * BYTES_PER_PIXEL])
+            byte_index += 1
+            if character == MESSAGE_DELIMITER:
                 break
-            res += ch
-        end = int(res) + idx
-        assert end <= total // BYTES_PER_PIXEL, "Input image isn't correct."
+            extracted_message_length += character
+        
+        message_length = int(extracted_message_length)
+        end_index = message_length + byte_index
+        assert end_index <= total_bytes // BYTES_PER_PIXEL, "Input image data is corrupted or incorrect."
 
-        secret = ''
-        while idx < end:
-            secret += decode(data[idx*BYTES_PER_PIXEL: (idx+1)*BYTES_PER_PIXEL])
-            idx += 1
-            # print(secret)
-        return secret
+        secret_message = ''
+        while byte_index < end_index:
+            secret_message += decode_character(flat_image_data[byte_index * BYTES_PER_PIXEL: (byte_index + 1) * BYTES_PER_PIXEL])
+            byte_index += 1
+        return secret_message
 
 
-    def decode(block):
-        val = 0
-        for idx in range(len(block)):
-            val |= (block[idx] & LOW) << (idx * BITS)
-        return chr(val)
+    def decode_character(image_block):
+        char_code = 0
+        for index in range(len(image_block)):
+            char_code |= (image_block[index] & BIT_MASK_LOW) << (index * BIT_DEPTH)
+        return chr(char_code)
     
-    return extract(path)
-
+    return extract_message_from_image(image_path)
 

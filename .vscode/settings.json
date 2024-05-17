@@ -1,8 +1,12 @@
 {
     "cSpell.ignoreWords": [
+        "imwrite",
         "pydub",
         "seqr",
         "steganography",
         "werkzeug"
+    ],
+    "cSpell.words": [
+        "imread"
     ]
 }
