@@ -31,7 +31,7 @@ def MessageToBinary(message):
     return result
 
 
-def determineFileType(filename):
+def determineFileType(filename) -> str:
     # Mapping from extension to file type
     extension_mapping = {
         '.jpg': 'image', '.jpeg': 'image', '.png': 'image',
@@ -46,19 +46,23 @@ def determineFileType(filename):
         return "unknown"
 
 
-def determineMediaType(filename):
+def determineMediaType(filename) -> str:
     return filename.rsplit('.', 1)[-1].lower()
    
 
 
-def Mp3ToWav(filepath):
+def Mp3ToWav(filepath) -> object:
     sound = AudioSegment.from_mp3(filepath)
-    sound.export(filepath,format='wav') 
-    return filepath
+    # file = 'encoded_mp3.mp3'
+    # converted_to_mp3_filepath = path.join(UPLOADED_FILES_DIR, file)
+    # sound.export(converted_to_mp3_filepath,format='wav') 
+    # return converted_to_mp3_filepath
+    return sound
     
-def WavToMp3(filepath):
+def WavToMp3(filepath) -> object:
     sound = AudioSegment.from_wav(filepath)
-    sound.export(mp3_file, format='mp3', bitrate=bitrate)
+    # sound.export(mp3_file, format='mp3', bitrate=bitrate)
+    return sound
     
     
 # current_dir = path.dirname(__file__)   

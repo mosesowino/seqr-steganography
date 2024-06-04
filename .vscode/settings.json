@@ -1,6 +1,7 @@
 {
     "cSpell.ignoreWords": [
         "imwrite",
+        "jsonify",
         "pydub",
         "seqr",
         "steganography",

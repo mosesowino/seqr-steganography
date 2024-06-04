@@ -9,10 +9,37 @@ import wave
 import os
 from operations import general_operations, processImage, processAudio
 from werkzeug.utils import secure_filename, redirect
+from flask_cors import CORS, cross_origin
+import mysql.connector
+
 
 
 app = Flask(__name__)
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_DATABASE'] = 'seqr'
+
+EXAMPLE_SQL = 'select * from seqr.user'
+
+def get_db_connection():
+    return mysql.connector.connect(
+        host = app.config['MYSQL_HOST'],
+        user = app.config['MYSQL_USER'],
+        database = app.config['MYSQL_DATABASE']
+    )
+
+@app.route('/data')
+def get_data():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(EXAMPLE_SQL)
+    rows = cursor.fetchall()
+    cursor.close()
+    return jsonify(rows)
+
 # msg = None
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
 def file_typeSpecificEncoding (file_type: str, message, filename):
     match file_type:
@@ -111,16 +138,17 @@ def decode_image(filename):
 
 
 def encode_audio(message, filepath):
-    audio_extension = general_operations.determineMediaType(filepath)
-    if 'mp3' in audio_extension:
-        general_operations.Mp3ToWav(filepath)
-        
+   
     audio = AudioSegment.from_file(filepath, format='wav')
     encoded_audio_file = processAudio.encode_aud_data(audio, message)
+    
 
     output_path = 'downloads/encoded_audio.wav'
     
     encoded_audio_file.export(output_path, format="wav")
+    
+    # if was_mp3:
+    #     sound = general_operations.WavToMp3(output_path)
 
     return output_path
 
@@ -130,6 +158,15 @@ def decode_audio(filepath):
     file = AudioSegment.from_file(filepath, format='wav')
     decoded_message = processAudio.decode_aud_data(file)
     return decoded_message
+
+
+# def Mp3ToWav(filepath) -> object:
+#     sound = AudioSegment.from_mp3(filepath)
+#     # file = 'encoded_mp3.mp3'
+#     # converted_to_mp3_filepath = path.join(UPLOADED_FILES_DIR, file)
+#     sound.export(converted_to_mp3_filepath,format='wav') 
+#     # return converted_to_mp3_filepath
+#     # return sound
 
 
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>seqr steganography app</title>
     <link rel="stylesheet" href="/static/index.css">
-    <script src="/static/index.js"></script>
+    <script src="/static/index.js" defer></script>
 </head>
 <body> 
     
@@ -13,12 +13,11 @@
         <h1>SEQr</h1>
 
         <div class="links">
-            <div>
-                <a href="/" ><img src="/static/images/profile.png" alt="" width="30px" height="30px"></a>
-                <span class="tooltip">profile</span>
-            </div>
-            
+            <img src="/static/images/profile.png" alt="" width="30px" height="30px" class="image_1">
+            <!-- <img src="/static/images/x.png" alt="" width="30px" height="30px" class="image_2 image_invisible"> -->
+            <span class="tooltip">profile</span>
         </div>
+        
     </nav>
     
     
@@ -29,11 +28,14 @@
                 
                 <div class="profile">
                     username
+                    <hr>
+                    <div>status:</div>
+                    <div>logout</div>
                 </div>
-                <p class="summary"><b><larger>SECURE</larger></b> your messages  </p>               
+                <p class="summary"><b style="color: black;"><larger>SECURE</larger></b> your messages  </p>               
                 <div class="buttons">
                     <button class="button help">help</button>
-                    <button class="button about"><a href="/about">About</a></button>
+                    <button class="button about" onclick="about()">About</button>
                 </div>
             </div>
         </div>
@@ -70,7 +72,7 @@
                     <input type="submit" class="submit button" id="decoding_button" value="Done" onclick="visible()">
                 </div>
                 <div class="contains_decoded" >
-                    <textarea name="decoded_message" id="copy_text" cols="30" rows="10" readonly>{{message}}</textarea>
+                    <textarea name="decoded_message" id="copy_text" cols="30" rows="10" placeholder="decoded message appears here" readonly>{{message}}</textarea>
                     <button class="copy_button" onclick="copyText()">copy</button>
                 </div>
             </form>

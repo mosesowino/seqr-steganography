@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="/static/index.css"> -->
+    <style>
+        body{
+            background-color: rebeccapurple;
+        }
+
+        .contains_sliding_pane{
+            /* background-color: green; */
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid black;
+            /* width: 240px;
+            height: 240px; */
+            /* position: relative; */
+        }
+
+        .sliding_pane{
+            background-color: red;
+            
+            /* position: absolute; */
+            width: 200px;
+            height: 200px;
+            
+            /* right: 20px;
+            top: 20px; */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="contains_sliding_pane">
+        <div class="sliding_pane">
+            <img src="{{url_for('static', filename = '/images/IMG-20240410-WA0001.jpg')}}" alt="slide_image1" width="100px" height="100px">
+        </div>
+        <div class="sliding_pane 2">
+            <img src="/static/images/undraw_Download_re_li50.png" alt="" width="100px" height="100px">
+        </div>
+        <div class="sliding_pane 3">
+            <img src="/static/images/x.png" alt="" width="100px" height="100px">
+        </div>
+    </div>
+
+</body>
+</html>
