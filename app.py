@@ -131,7 +131,7 @@ def encode_image(message, filename):
     
     
 def decode_image(filename):
-    decoded_message = processImage.decode_img_data(filename)
+    decoded_message = processImage.decode_image_data(filename)
     
     return decoded_message
 
