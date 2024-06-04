@@ -123,7 +123,7 @@ def about():
 
 def encode_image(message, filename):
 
-    encoded_img = processImage.encode_img_data(filename, message)
+    encoded_img = processImage.encode_image_data(filename, message)
 
     
     return os.path.abspath(encoded_img)
