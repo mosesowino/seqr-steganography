@@ -1,4 +1,4 @@
-from flask import Flask, send_file, request, redirect, url_for
+from flask import Flask, send_file, request, redirect, url_for, jsonify
 from flask import render_template
 from PIL import Image
 from pydub import AudioSegment
@@ -19,7 +19,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_DATABASE'] = 'seqr'
 
-EXAMPLE_SQL = 'select * from seqr.user'
+EXAMPLE_SQL = 'select * from seqr.users'
 
 def get_db_connection():
     return mysql.connector.connect(
