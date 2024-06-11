@@ -14,14 +14,16 @@ body{
     justify-content: space-around;
 }
 
-body>h1{
+body h1{
     display: flex;
     justify-content: center;
     font-family: cursive;
     color: var(--pink);
     margin-top: 10px;
     margin-left: 5px;
-    text-shadow: 0 10 10px 0 var(--pink);
+    text-shadow: 1px 1px black,
+                2px 2px black,
+                3px 3px black;
 }
 
 body>:first-child{
@@ -39,6 +41,9 @@ body>:first-child{
 .navbar h1{
     color: #f1356d;
     position: absolute;
+}
+.navbar h1:hover{
+    cursor: pointer;
 }
 .navbar .links{
     width: fit-content;
@@ -61,6 +66,10 @@ body>:first-child{
 }
 .links:hover{
     color: var(--dark);
+}
+.links img{
+    border-radius: 100%;
+    box-shadow: 3px 3px 5px black;
 }
 .profile{
     backdrop-filter: blur(3px);
@@ -141,6 +150,7 @@ body>:first-child{
     border: none;
     padding: 5px 0;
     min-width: 80px;
+    box-shadow: 3px 3px 5px black;
 }
 
 .navbar a{

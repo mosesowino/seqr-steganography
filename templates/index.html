@@ -3,80 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seqr steganography app</title>
-    <link rel="stylesheet" href="/static/index.css">
-    <script src="/static/index.js" defer></script>
+    <title>SEQr</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            /* background-color: #f0f0f0; */
+            /* background: url('/static/video/landing.mp4'); */
+            
+        }
+        h1 {
+            font-size: 3em;
+            margin: 0.5em 0;
+            color: #f1356d;
+            font-family: cursive;
+            text-shadow: 1px 1px black,
+                        2px 2px black,
+                        3px 3px black;
+        }
+        .slogan-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .slogan {
+            color: #f1356d;
+            font-family: cursive;
+            font-size: 1.5em;
+            margin: 0 0.2em;
+            animation: scroll 10s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        } 
+        .container {
+            background: #fff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 200px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 1em;
+        }
+        input {
+            width: 100%;
+            padding: 0.5em;
+            margin: 0.5em 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 0.3em 0.8em;
+            margin-top: 1em;
+            border-radius: 5px;
+            border: 1px solid black;
+            /* background-color: #f1356d; */
+            background: transparent;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 2px 2px 3px black;
+        }
+        button:hover {
+            background-color: #f1356d;
+        }
+        .hidden{
+            display: none;
+        }
+        .login_button{
+            background-color: #f1356d;
+            color: white;
+            font-weight: 700;
+        }
+
+        .register_button{
+            color: #f1356d;
+            font-size: larger;
+            font-weight: 800;
+        }
+        .register_button:hover{
+            cursor: pointer;
+        }
+
+        .container{
+            /* background-color: rgba(241, 53, 109, 0.1); */
+            background: linear-gradient(90deg ,transparent, rgba(241, 53, 109, 0.1), rgba(241, 53, 109,1));
+            /* background-size: 3px; */
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 2px 5px black;
+        }
+        .video{
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: -1;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+        .content{
+            position: relative;
+            z-index: 1;
+        }
+        input:focus{
+            background-color: rgb(0, 149, 255);
+        }
+    </style>
 </head>
-<body> 
-    
-    <nav class="navbar">
+<body>
+    <video class="video" autoplay loop muted>
+        <source src="/static/video/landing.mp4">
+    </video>
+    <div class="content">
         <h1>SEQr</h1>
-
-        <div class="links">
-            <span class="tooltip">profile</span>
-            <img src="/static/images/profile.png" alt="" width="30px" height="30px" class="image_1">
+        <div class="slogan-container">
+            <div class="slogan">secure your messages</div>
+            <!-- <div class="slogan">secure your messages</div>
+            <div class="slogan">secure your messages</div> -->
+            <!-- <div class="slogan">secure your messages</div>
+            <div class="slogan">secure your messages</div>
+            <div class="slogan">secure your messages</div>
+            <div class="slogan">secure your messages</div> -->
         </div>
-        
-    </nav>
-    
-    
-    
-    <section class="intro">
-        <div class="container">
-            <div class="operations">
-                
-                <div class="profile">
-                    username
-                    <hr>
-                    <div>status:</div>
-                    <div>logout</div>
-                </div>
-                <p class="summary"><b style="color: black;"><larger>SECURE</larger></b> your messages  </p>               
-                <div class="buttons">
-                    <button class="button help">help</button>
-                    <button class="button about" onclick="about()">About</button>
-                </div>
-            </div>
+        <div class="login_register">
+            <button  onclick="login()" class="login_button" class="login_button">login</button>
+            <br><h4 style="color: white;">no account? </h4>
+            <p href="" onclick="register()" style="text-decoration: underline;" class="register_button">register</p>
         </div>
-    </section>
-
-
-
-    <section class="encode">
-        <div>
-            <h3 class="hide_message">Hide Message</h3>  
-            <hr>
-            <form class="encode_operations" method="post" action="/" enctype="multipart/form-data" >
-                <textarea name="secret_message" id="secret_message" cols="30" rows="10" placeholder="Enter message" required></textarea>
-                <div name="cover_file" id="cover_file">
-                    <div class="file">
-                        <h4>cover file</h4>
-                        <input type="file" id="file" name="file_to_encode" class="file_to_encode" required accept=".wav, .mp3, .jpg">
-                    </div>
-                    <input type="submit" class="submit button" value="Done">
-                </div>
-            </form>     
-        </div>
-    </section>
-
-
-
-    <section class="decode">
-        <div>
-            <h3 class="extract_message">Extract Message</h3>
-            <hr>
-            <form class="decode_operations" method="post" action="/" enctype="multipart/form-data">
-                <div class="fileToDecode">
-                    <input type="file" name="file_to_decode" class="file_to_decode" required accept=".wav, .mp3, .jpg, .png">
-                    <input type="submit" class="submit button" id="decoding_button" value="Done" onclick="visible()">
-                </div>
-                <div class="contains_decoded" >
-                    <textarea name="decoded_message" id="copy_text" cols="30" rows="10" placeholder="decoded message appears here" readonly>{{message}}</textarea>
-                    <button class="copy_button" onclick="copyText()">copy</button>
-                </div>
+        <div class="container register hidden">
+            <h2>Register</h2>
+            <form method="post" action="/" enctype="multipart/form-data">
+                <input type="text" name="username" placeholder="Username" autocomplete="name" required>
+                <input type="email" name="email" placeholder="Email" autocomplete="email" required>
+                <input type="password" name="password" placeholder="Password" autocomplete="off" required>
+                <button type="submit">Register</button>
             </form>
         </div>
-    </section>
+    
+        <div class="container login hidden">
+            <h2>login</h2>
+            <form method="post" action="/" enctype="multipart/form-data">
+                <input type="text" name="username" placeholder="username" autocomplete="name" required>
+                <input type="password" name="password" placeholder="password" autocomplete="off" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
 
+    </div>
+
+    <script>
+        // setTimeout(function() {
+        //     window.location.href = "https://seqr-steganography-4.onrender.com/"; // Change this to the URL you want to redirect to
+        // }, 3000); // 3000 milliseconds = 3 seconds
+
+        let log = document.querySelector('.login')
+        let reg = document.querySelector('.register')
+        let log_button = document.querySelector('.login_button')
+        let reg_button = document.querySelector('.register_button')
+
+        function login(){
+            // let register = document.querySelector('.register')
+            log.classList.toggle('hidden')
+            reg.classList.add('hidden')
+            reg_button.classList.remove('hidden')
+            log_button.classList.toggle('hidden')
+        }
+        function register(){
+            reg.classList.toggle('hidden')
+            reg_button.classList.toggle('hidden')
+            log.classList.add('hidden')
+            log_button.classList.remove('hidden')
+
+        }
+
+    </script>
 </body>
 </html>

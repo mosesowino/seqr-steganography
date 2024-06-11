@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>seqr steganography app</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <script src="/static/index.js" defer></script>
+</head>
+<body> 
+    
+    <nav class="navbar">
+        <h1 onclick="reload()">SEQr</h1>
+
+        <div class="links">
+            <span class="tooltip">profile</span>
+            <img src="/static/images/profile.png" alt="" width="30px" height="30px" class="image_1">
+        </div>
+        
+    </nav>
+    
+    
+    
+    <section class="intro">
+        <div class="container">
+            <div class="operations">
+                
+                <div class="profile">
+                    {{username}}
+                    <hr>
+                    <div>status:{{active}}</div>
+                    <div>logout</div>
+                </div>
+                <p class="summary"><b style="color: black;"><larger>SECURE</larger></b> your messages  </p>               
+                <div class="buttons">
+                    <button class="button help">help</button>
+                    <button class="button about" onclick="about()">About</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="encode">
+        <div>
+            <h3 class="hide_message">Hide Message</h3>  
+            <hr>
+            <form class="encode_operations" method="post" action="/main" enctype="multipart/form-data" >
+                <textarea name="secret_message" id="secret_message" cols="30" rows="10" placeholder="Enter message" required></textarea>
+                <div name="cover_file" id="cover_file">
+                    <div class="file">
+                        <h4>cover file</h4>
+                        <input type="file" id="file" name="file_to_encode" class="file_to_encode" required accept=".wav, .mp3, .jpg">
+                    </div>
+                    <input type="submit" class="submit button" value="Done">
+                </div>
+            </form>     
+        </div>
+    </section>
+
+
+
+    <section class="decode">
+        <div>
+            <h3 class="extract_message">Extract Message</h3>
+            <hr>
+            <form class="decode_operations" method="post" action="/main" enctype="multipart/form-data">
+                <div class="fileToDecode">
+                    <input type="file" name="file_to_decode" class="file_to_decode" required accept=".wav, .mp3, .jpg, .png">
+                    <input type="submit" class="submit button" id="decoding_button" value="Done" onclick="visible()">
+                </div>
+                <div class="contains_decoded" >
+                    <textarea name="decoded_message" id="copy_text" cols="30" rows="10" placeholder="decoded message appears here" readonly>{{message}}</textarea>
+                    <button class="copy_button" onclick="copyText()">copy</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        function reload(){
+            location.reload()
+        }
+    </script>
+
+</body>
+</html>

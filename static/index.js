@@ -39,4 +39,9 @@ function about(){
 }
 
 
+let x = document.querySelector('.x')
+console.log(x)
+x.addEventListener('click',()=>{
+    document.querySelector('.about_body').classList.add('about_invisible')
+})
 

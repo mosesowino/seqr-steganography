@@ -12,14 +12,22 @@ from werkzeug.utils import secure_filename, redirect
 from flask_cors import CORS, cross_origin
 import mysql.connector
 
-
-
 app = Flask(__name__)
+
+
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_DATABASE'] = 'seqr'
 
-EXAMPLE_SQL = 'select * from seqr.users'
+EXAMPLE_SQL = 'select * from seqr.users where email = %s and username = %s'
+LOGIN ="select * from seqr.users where username = %s and password = %s"
+REGISTER = "INSERT INTO users VALUES(%s,%s,%s)"
+LOGGED_IN = False
+USERNAME = ''
+PASSWORD = ''
+EMAIL = ''
 
 def get_db_connection():
     return mysql.connector.connect(
@@ -30,17 +38,63 @@ def get_db_connection():
 
 @app.route('/data')
 def get_data():
+    email = ('user1@gmail.com')
+    username = ('user1')
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute(EXAMPLE_SQL)
+    cursor.execute(EXAMPLE_SQL,(email,username))
     rows = cursor.fetchall()
     cursor.close()
     return jsonify(rows)
 
-# msg = None
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+@app.route('/', methods=['POST', 'GET'])
+def index():
+    CONN = get_db_connection()
+    CURSOR = CONN.cursor(dictionary=True)
+    global USERNAME, PASSWORD, EMAIL
+    
+    if request.method == "GET":
+        return render_template('index.html')
+    
+    if request.method == "POST":
+        if len(request.form) == 2:
+            USERNAME = request.form.get("username")
+            PASSWORD = request.form.get("password")
+            EMAIL = False
+            
+        elif len(request.form) == 3:
+            USERNAME = request.form.get("username")
+            EMAIL = request.form.get("email")
+            PASSWORD = request.form.get("password")
+            print(f"Email------>{EMAIL}")
+            print(f"Password ------>{PASSWORD}")
+        
+        if not EMAIL:
+            CURSOR.execute(LOGIN,(USERNAME, PASSWORD))
+            rows = CURSOR.fetchone()
+            CURSOR.close()
+            if not rows:
+                return "Invalid credentials, try Again"
+            
+            global LOGGED_IN
+            LOGGED_IN = True
+            # return f"Active: {LOGGED_IN}"
+            if LOGGED_IN:
+                return redirect('/main')
+        
+        elif EMAIL:
+            try:
+                CURSOR.execute(REGISTER,(USERNAME,EMAIL,PASSWORD))
+                CONN.commit()
+                CURSOR.close()
+                return redirect('/main')
+            except:
+                return 'Registration failed'
+                
+            
+            
 
-
+        
 def file_typeSpecificEncoding (file_type: str, message, filename):
     match file_type:
         case "audio":
@@ -64,10 +118,10 @@ def file_typeSpecificDecoding(file_type, filename):
                 return "Unsupported file type"
                 
         
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/main', methods=['GET', 'POST'])
 def home():
     if request.method == "GET":
-        return render_template('index.html')
+        return render_template('main.html',username=USERNAME, active=LOGGED_IN)
         
     elif request.method == "POST":
         # data = request.form.get("secret_message")
@@ -110,7 +164,7 @@ def home():
             global msg 
             msg = decoding_response
             
-            return render_template('index.html',message=msg)
+            return render_template('main.html',message=msg,username=USERNAME, active=LOGGED_IN)
             
     else:
         return redirect(url_for('home')) 
