@@ -45,7 +45,7 @@ This project is built using:
 3. Run the application:
 
    ```bash
-   python main.py
+   python app.py
    ```
 
 4. Access the web interface in your browser at `http://localhost:5000`.
